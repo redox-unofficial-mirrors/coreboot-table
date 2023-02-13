@@ -16,7 +16,7 @@ unsafe fn text<'a>(ptr: *const u8, max: usize) -> &'a [u8] {
     )
 }
 
-#[derive(Debug)]
+#[derive(Copy, Clone, Debug)]
 #[repr(packed)]
 pub struct CmosEntry {
     pub record: Record,
@@ -38,7 +38,7 @@ impl CmosEntry {
     }
 }
 
-#[derive(Debug)]
+#[derive(Copy, Clone, Debug)]
 #[repr(packed)]
 pub struct CmosEnum {
     pub record: Record,
@@ -65,7 +65,7 @@ pub enum CmosRecord<'a> {
     Other(&'a Record),
 }
 
-#[derive(Debug)]
+#[derive(Copy, Clone, Debug)]
 #[repr(packed)]
 pub struct Cmos {
     pub record: Record,

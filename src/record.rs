@@ -1,4 +1,4 @@
-#[derive(Clone, Debug)]
+#[derive(Copy, Clone, Debug)]
 #[repr(u32)]
 pub enum RecordKind {
     Unused = 0x0,
@@ -50,7 +50,7 @@ pub enum RecordKind {
     OptionChecksum = 204,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Copy, Clone, Debug)]
 #[repr(packed)]
 pub struct Record {
     pub kind: RecordKind,

@@ -1,4 +1,4 @@
-#[derive(Debug)]
+#[derive(Copy, Clone, Debug)]
 #[repr(packed)]
 pub struct Header {
     pub signature: [u8; 4],
