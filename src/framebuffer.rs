@@ -1,6 +1,6 @@
 use super::Record;
 
-#[derive(Clone, Debug)]
+#[derive(Copy, Clone, Debug)]
 #[repr(packed)]
 pub struct Framebuffer {
     pub record: Record,

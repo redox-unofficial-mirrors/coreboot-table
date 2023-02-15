@@ -2,7 +2,7 @@ use core::{mem, slice};
 
 use super::{Cb64, Record};
 
-#[derive(Debug)]
+#[derive(Copy, Clone, Debug)]
 #[repr(u32)]
 pub enum MemoryRangeKind {
     Ram = 1,
@@ -14,7 +14,7 @@ pub enum MemoryRangeKind {
     Table = 16,
 }
 
-#[derive(Debug)]
+#[derive(Copy, Clone, Debug)]
 #[repr(packed)]
 pub struct MemoryRange {
     pub start: Cb64,
