@@ -12,6 +12,7 @@ pub enum MemoryRangeKind {
     Unusable = 5,
     VendorReserved = 6,
     Table = 16,
+    SoftReserved = 0xefffffff,
 }
 
 #[derive(Copy, Clone, Debug)]
@@ -24,8 +25,9 @@ pub struct MemoryRange {
 
 #[derive(Debug)]
 #[repr(C, align(4))]
-pub struct Memory {
+pub struct Memory<const N: usize = 0> {
     pub record: Record,
+    pub map: [MemoryRange; N],
 }
 
 impl Memory {
