@@ -54,6 +54,9 @@ fn main() {
             Table::Serial(serial) => {
                 println!("{:?}", serial);
             },
+            Table::SmmstoreV2(smmstore) => {
+                println!("{:?}", smmstore);
+            },
             Table::Other(other) => {
                 println!("{:?}", other);
             },

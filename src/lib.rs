@@ -11,6 +11,7 @@ pub use self::mapper::{Mapper, PhysicalAddress, VirtualAddress};
 pub use self::memory::{Memory, MemoryRange, MemoryRangeKind};
 pub use self::record::{Record, RecordKind};
 pub use self::serial::Serial;
+pub use self::smmstore::SmmstoreV2;
 
 mod cb64;
 mod cmos;
@@ -21,6 +22,7 @@ mod mapper;
 mod memory;
 mod record;
 mod serial;
+mod smmstore;
 
 #[derive(Debug)]
 pub enum Table<'a> {
@@ -28,6 +30,7 @@ pub enum Table<'a> {
     Framebuffer(&'a Framebuffer),
     Memory(&'a Memory),
     Serial(&'a Serial),
+    SmmstoreV2(&'a SmmstoreV2),
     Other(&'a Record),
 }
 
@@ -94,6 +97,9 @@ impl<'m, F: FnMut(Table) -> Result<(), &'static str>, M: Mapper> Env<'m, F, M> {
                     )),
                     RecordKind::Serial => (self.callback)(Table::Serial (
                         unsafe { &*(record_address as *const Serial) }
+                    )),
+                    RecordKind::SmmstoreV2 => (self.callback)(Table::SmmstoreV2(
+                        unsafe { &*(record_address as *const SmmstoreV2) }
                     )),
                     _ => (self.callback)(Table::Other(record)),
                 };
