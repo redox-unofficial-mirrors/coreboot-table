@@ -1,7 +1,7 @@
 use super::Record;
 
 #[derive(Copy, Clone, Debug)]
-#[repr(packed)]
+#[repr(C, align(4))]
 pub struct Framebuffer {
     pub record: Record,
     pub physical_address: u64,

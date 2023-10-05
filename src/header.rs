@@ -1,5 +1,5 @@
 #[derive(Copy, Clone, Debug)]
-#[repr(packed)]
+#[repr(C, align(4))]
 pub struct Header {
     pub signature: [u8; 4],
     pub header_bytes: u32,

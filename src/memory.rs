@@ -15,7 +15,7 @@ pub enum MemoryRangeKind {
 }
 
 #[derive(Copy, Clone, Debug)]
-#[repr(packed)]
+#[repr(C, align(4))]
 pub struct MemoryRange {
     pub start: Cb64,
     pub size: Cb64,
@@ -23,7 +23,7 @@ pub struct MemoryRange {
 }
 
 #[derive(Debug)]
-#[repr(packed)]
+#[repr(C, align(4))]
 pub struct Memory {
     pub record: Record,
 }
