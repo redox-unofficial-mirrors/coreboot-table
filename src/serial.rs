@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 use super::Record;
 
 #[derive(Copy, Clone, Debug)]

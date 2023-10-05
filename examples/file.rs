@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 extern crate coreboot_table;
 
 use std::{env, str};
