@@ -1,10 +1,19 @@
-use super::Record;
+use super::{Cb64, Record};
+
+#[derive(Copy, Clone, Debug, Eq, PartialEq)]
+#[repr(u8)]
+pub enum FramebufferOrientation {
+    Normal = 0,
+    BottomUp = 1,
+    LeftUp = 2,
+    RightUp = 3,
+}
 
 #[derive(Copy, Clone, Debug)]
 #[repr(C, align(4))]
 pub struct Framebuffer {
     pub record: Record,
-    pub physical_address: u64,
+    pub physical_address: Cb64,
     pub x_resolution: u32,
     pub y_resolution: u32,
     pub bytes_per_line: u32,
@@ -17,4 +26,6 @@ pub struct Framebuffer {
     pub blue_mask_size: u8,
     pub reserved_mask_pos: u8,
     pub reserved_mask_size: u8,
+    pub orientation: FramebufferOrientation,
+    pub pad: [u8; 2],
 }
