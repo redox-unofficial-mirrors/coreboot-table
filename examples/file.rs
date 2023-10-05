@@ -12,8 +12,7 @@ mod mapper;
 
 fn main() {
     let path = env::args()
-        .skip(1)
-        .next()
+        .nth(1)
         .unwrap_or("res/example.bin".to_string());
 
     let mut mapper = FileMapper::new(&path).unwrap();

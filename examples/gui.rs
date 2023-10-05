@@ -1,8 +1,5 @@
 // SPDX-License-Identifier: MIT
 
-extern crate coreboot_table;
-extern crate orbtk;
-
 use std::{env, str};
 use std::collections::BTreeMap;
 
@@ -23,8 +20,7 @@ fn main() {
     );
 
     let path = env::args()
-        .skip(1)
-        .next()
+        .nth(1)
         .unwrap_or("res/example.bin".to_string());
 
     let mut mapper = FileMapper::new(&path).unwrap();
@@ -67,6 +63,12 @@ fn main() {
                     println!("    {:?}", range);
                 }
             },
+            Table::Serial(serial) => {
+                println!("{:?}", serial);
+            },
+            Table::SmmstoreV2(smmstore) => {
+                println!("{:?}", smmstore);
+            },
             Table::Other(other) => {
                 println!("{:?}", other);
             },
@@ -87,7 +89,7 @@ fn main() {
         if let Some(enums) = enums_map.get(config_id) {
             let combo_box = ComboBox::new();
             combo_box.position(x + 200, y);
-            for (name, value) in enums {
+            for (name, _value) in enums {
                 combo_box.push(name);
             }
             widgets.push(combo_box);
@@ -97,7 +99,7 @@ fn main() {
     }
 
     for widget in widgets.iter().rev() {
-        window.add(&widget);
+        window.add(widget);
     }
 
     window.exec();
