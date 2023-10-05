@@ -16,7 +16,7 @@ fn main() {
             -1, -1,
             1024, 768
         ),
-        "Coreboot Table"
+        "coreboot Table"
     );
 
     let path = env::args()
