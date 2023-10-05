@@ -51,7 +51,7 @@ pub enum RecordKind {
 }
 
 #[derive(Copy, Clone, Debug)]
-#[repr(packed)]
+#[repr(C, align(4))]
 pub struct Record {
     pub kind: RecordKind,
     pub size: u32,

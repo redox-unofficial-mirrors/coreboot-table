@@ -1,7 +1,7 @@
 use super::Record;
 
 #[derive(Copy, Clone, Debug)]
-#[repr(packed)]
+#[repr(C, align(4))]
 pub struct Serial {
     pub record: Record,
     pub kind: u32,

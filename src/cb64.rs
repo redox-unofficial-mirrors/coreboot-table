@@ -1,5 +1,5 @@
 #[derive(Clone, Copy, Debug)]
-#[repr(packed)]
+#[repr(C, align(4))]
 pub struct Cb64 {
     lo: u32,
     hi: u32,
