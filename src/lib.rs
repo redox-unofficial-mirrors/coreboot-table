@@ -2,7 +2,6 @@
 
 use core::{mem, ptr};
 
-pub use self::cb64::Cb64;
 pub use self::cmos::{Cmos, CmosEntry, CmosEnum, CmosRecord};
 pub use self::forward::Forward;
 pub use self::framebuffer::Framebuffer;
@@ -13,7 +12,6 @@ pub use self::record::{Record, RecordKind};
 pub use self::serial::Serial;
 pub use self::smmstore::SmmstoreV2;
 
-mod cb64;
 mod cmos;
 mod forward;
 mod framebuffer;
@@ -23,6 +21,10 @@ mod memory;
 mod record;
 mod serial;
 mod smmstore;
+
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[repr(C, align(4))]
+pub struct Cb64(pub u64);
 
 #[derive(Debug)]
 pub enum Table<'a> {
@@ -51,7 +53,7 @@ impl<'m, F: FnMut(Table) -> Result<(), &'static str>, M: Mapper> Env<'m, F, M> {
     fn forward(&mut self, forward: &Forward) -> Result<(), &'static str> {
         let page_size = self.mapper.page_size();
 
-        let header_physical = PhysicalAddress(forward.forward as usize);
+        let header_physical = PhysicalAddress(forward.forward.0 as usize);
         let header_address = unsafe { self.mapper.map(header_physical, page_size)? };
 
         let header = unsafe { ptr::read((header_address.0) as *const Header) };

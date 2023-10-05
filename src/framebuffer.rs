@@ -1,10 +1,10 @@
-use super::Record;
+use super::{Cb64, Record};
 
 #[derive(Copy, Clone, Debug)]
 #[repr(C, align(4))]
 pub struct Framebuffer {
     pub record: Record,
-    pub physical_address: u64,
+    pub physical_address: Cb64,
     pub x_resolution: u32,
     pub y_resolution: u32,
     pub bytes_per_line: u32,
