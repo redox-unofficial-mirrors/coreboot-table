@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 #[derive(Copy, Clone, Debug)]
 #[repr(C, align(4))]
 pub struct Header {

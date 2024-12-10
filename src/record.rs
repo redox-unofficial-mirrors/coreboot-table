@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]
 #[repr(u32)]
 pub enum RecordKind {

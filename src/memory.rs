@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 use core::{mem, slice};
 
 use super::{Cb64, Record};

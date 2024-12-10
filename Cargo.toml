@@ -2,9 +2,6 @@
 name = "coreboot-table"
 version = "0.1.6"
 authors = ["Jeremy Soller <jeremy@system76.com>"]
-edition = "2018"
-description = "Coreboot Table Parser"
+edition = "2021"
+description = "coreboot Table Parser"
 license = "MIT"
-
-# [dev-dependencies]
-# orbtk = { path = "orbtk" }

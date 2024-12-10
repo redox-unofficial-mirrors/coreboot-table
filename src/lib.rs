@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 #![no_std]
 
 use core::{mem, ptr};
@@ -106,7 +108,7 @@ impl<'m, F: FnMut(Table) -> Result<(), &'static str>, M: Mapper> Env<'m, F, M> {
                     _ => (self.callback)(Table::Other(record)),
                 };
 
-                if ! result.is_ok() {
+                if result.is_err() {
                     break;
                 }
 
@@ -117,7 +119,7 @@ impl<'m, F: FnMut(Table) -> Result<(), &'static str>, M: Mapper> Env<'m, F, M> {
 
         unsafe { self.mapper.unmap(table_address)? };
 
-        return result;
+        result
     }
 
     pub fn tables(&mut self) -> Result<(), &'static str> {
