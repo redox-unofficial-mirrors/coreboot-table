@@ -39,7 +39,7 @@ impl Memory {
         unsafe {
             slice::from_raw_parts(
                 address as *const MemoryRange,
-                size / mem::size_of::<MemoryRange>()
+                size / mem::size_of::<MemoryRange>(),
             )
         }
     }

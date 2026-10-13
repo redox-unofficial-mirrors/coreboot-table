@@ -11,57 +11,51 @@ use mapper::FileMapper;
 mod mapper;
 
 fn main() {
-    let path = env::args()
-        .nth(1)
-        .unwrap_or("res/example.bin".to_string());
+    let path = env::args().nth(1).unwrap_or("res/example.bin".to_string());
 
     let mut mapper = FileMapper::new(&path).unwrap();
 
-    coreboot_table::tables(|table| {
-        match table {
-            Table::Cmos(cmos) => {
-                println!("{:?}", cmos);
-                for record in cmos.records() {
-                    match record {
-                        CmosRecord::Entry(entry) => {
-                            println!(
-                                "    {:?}: {:?}",
-                                str::from_utf8(entry.name()),
-                                entry
-                            )
-                        },
-                        CmosRecord::Enum(enum_) => {
-                            println!(
-                                "    {:?}: {:?}",
-                                str::from_utf8(enum_.text()),
-                                enum_
-                            )
-                        },
-                        CmosRecord::Other(other) => {
-                            println!("    {:?}", other);
-                        },
+    coreboot_table::tables(
+        |table| {
+            match table {
+                Table::Cmos(cmos) => {
+                    println!("{:?}", cmos);
+                    for record in cmos.records() {
+                        match record {
+                            CmosRecord::Entry(entry) => {
+                                println!("    {:?}: {:?}", str::from_utf8(entry.name()), entry)
+                            }
+                            CmosRecord::Enum(enum_) => {
+                                println!("    {:?}: {:?}", str::from_utf8(enum_.text()), enum_)
+                            }
+                            CmosRecord::Other(other) => {
+                                println!("    {:?}", other);
+                            }
+                        }
                     }
                 }
-            },
-            Table::Framebuffer(framebuffer) => {
-                println!("{:?}", framebuffer);
-            },
-            Table::Memory(memory) => {
-                println!("{:?}", memory);
-                for range in memory.ranges() {
-                    println!("    {:?}", range);
+                Table::Framebuffer(framebuffer) => {
+                    println!("{:?}", framebuffer);
                 }
-            },
-            Table::Serial(serial) => {
-                println!("{:?}", serial);
-            },
-            Table::SmmstoreV2(smmstore) => {
-                println!("{:?}", smmstore);
-            },
-            Table::Other(other) => {
-                println!("{:?}", other);
-            },
-        }
-        Ok(())
-    }, &mut mapper).unwrap();
+                Table::Memory(memory) => {
+                    println!("{:?}", memory);
+                    for range in memory.ranges() {
+                        println!("    {:?}", range);
+                    }
+                }
+                Table::Serial(serial) => {
+                    println!("{:?}", serial);
+                }
+                Table::SmmstoreV2(smmstore) => {
+                    println!("{:?}", smmstore);
+                }
+                Table::Other(other) => {
+                    println!("{:?}", other);
+                }
+            }
+            Ok(())
+        },
+        &mut mapper,
+    )
+    .unwrap();
 }

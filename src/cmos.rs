@@ -12,12 +12,7 @@ unsafe fn text<'a>(ptr: *const u8, max: usize) -> &'a [u8] {
         }
         i += 1;
     }
-    unsafe {
-        slice::from_raw_parts(
-            ptr,
-            i
-        )
-    }
+    unsafe { slice::from_raw_parts(ptr, i) }
 }
 
 #[derive(Copy, Clone, Debug)]
@@ -36,7 +31,7 @@ impl CmosEntry {
         unsafe {
             text(
                 (self as *const CmosEntry as usize + mem::size_of::<CmosEntry>()) as *const u8,
-                self.record.size as usize - mem::size_of::<CmosEntry>()
+                self.record.size as usize - mem::size_of::<CmosEntry>(),
             )
         }
     }
@@ -56,7 +51,7 @@ impl CmosEnum {
         unsafe {
             text(
                 (self as *const CmosEnum as usize + mem::size_of::<CmosEnum>()) as *const u8,
-                self.record.size as usize - mem::size_of::<CmosEnum>()
+                self.record.size as usize - mem::size_of::<CmosEnum>(),
             )
         }
     }
@@ -98,12 +93,10 @@ impl<'a> Iterator for CmosRecords<'a> {
             let record = unsafe { &*(address as *const Record) };
             self.i += record.size as usize;
             Some(match record.kind {
-                RecordKind::Option => CmosRecord::Entry(unsafe {
-                    &*(address as *const CmosEntry)
-                }),
-                RecordKind::OptionEnum => CmosRecord::Enum(unsafe {
-                    &*(address as *const CmosEnum)
-                }),
+                RecordKind::Option => CmosRecord::Entry(unsafe { &*(address as *const CmosEntry) }),
+                RecordKind::OptionEnum => {
+                    CmosRecord::Enum(unsafe { &*(address as *const CmosEnum) })
+                }
                 _ => CmosRecord::Other(record),
             })
         } else {

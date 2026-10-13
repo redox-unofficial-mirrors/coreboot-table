@@ -13,13 +13,17 @@ pub struct FileMapper {
 impl FileMapper {
     pub fn new(path: &str) -> io::Result<FileMapper> {
         Ok(FileMapper {
-            file: File::open(path)?
+            file: File::open(path)?,
         })
     }
 }
 
 impl Mapper for FileMapper {
-    unsafe fn map_aligned(&mut self, address: PhysicalAddress, size: usize) -> Result<VirtualAddress, &'static str> {
+    unsafe fn map_aligned(
+        &mut self,
+        address: PhysicalAddress,
+        size: usize,
+    ) -> Result<VirtualAddress, &'static str> {
         extern "C" {
             fn memalign(alignment: usize, size: usize) -> usize;
         }
@@ -30,12 +34,11 @@ impl Mapper for FileMapper {
             return Err("Failed to allocate memory");
         }
 
-        let data = slice::from_raw_parts_mut(
-            ptr as *mut u8,
-            size
-        );
+        let data = slice::from_raw_parts_mut(ptr as *mut u8, size);
 
-        self.file.seek(SeekFrom::Start(address.0 as u64)).map_err(|_| "Failed to seek file")?;
+        self.file
+            .seek(SeekFrom::Start(address.0 as u64))
+            .map_err(|_| "Failed to seek file")?;
         self.file.read(data).map_err(|_| "Failed to read file")?;
 
         Ok(VirtualAddress(ptr))
