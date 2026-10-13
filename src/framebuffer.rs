@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 
 use super::{Cb64, Record};
+use bitflags::bitflags;
 
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]
 #[repr(u8)]
@@ -9,6 +10,15 @@ pub enum FramebufferOrientation {
     BottomUp = 1,
     LeftUp = 2,
     RightUp = 3,
+}
+
+bitflags! {
+    #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash)]
+    #[repr(transparent)]
+    pub struct FramebufferFlags: u8 {
+        const HAS_EXTERNAL_DISPLAY = 1 << 0;
+        const HAS_DUAL_PIPE = 1 << 1;
+    }
 }
 
 #[derive(Copy, Clone, Debug)]
@@ -29,5 +39,6 @@ pub struct Framebuffer {
     pub reserved_mask_pos: u8,
     pub reserved_mask_size: u8,
     pub orientation: FramebufferOrientation,
-    pub pad: [u8; 2],
+    pub flags: FramebufferFlags,
+    pub pad: u8,
 }

@@ -60,12 +60,20 @@ pub enum RecordKind {
     TypeCInfo = 0x42,
     AcpiRsdp = 0x43,
     Pcie = 0x44,
+    EfiFwInfo = 0x45,
+    Capsule = 0x46,
+    CfrRoot = 0x47,
+    RootBridgeInfo = 0x48,
+    PanelPoweroff = 0x49,
+    SdhciNonpci = 0x4a,
+    BootReason = 0x4b,
     // CMOS-related
     CmosOptionTable = 0xc8,
     Option = 0xc9,
     OptionEnum = 0xca,
     OptionDefaults = 0xcb,
     OptionChecksum = 0xcc,
+    BootMode = 0xcd,
 }
 
 #[derive(Copy, Clone, Debug)]

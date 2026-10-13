@@ -14,6 +14,7 @@ pub enum MemoryRangeKind {
     Unusable = 5,
     VendorReserved = 6,
     Table = 16,
+    Tag = 17,
     SoftReserved = 0xefffffff,
 }
 
