@@ -18,9 +18,9 @@ pub trait Mapper {
         let page = address.0/page_size;
         let aligned_address = PhysicalAddress(page * page_size);
         let offset = address.0 - aligned_address.0;
-        let pages = (offset + size + page_size - 1) / page_size;
+        let pages = (offset + size).div_ceil(page_size);
         let aligned_size = pages * page_size;
-        let virtual_address = self.map_aligned(aligned_address, aligned_size)?;
+        let virtual_address = unsafe { self.map_aligned(aligned_address, aligned_size)? };
         Ok(VirtualAddress(virtual_address.0 + offset))
     }
 
@@ -28,6 +28,6 @@ pub trait Mapper {
         let page_size = self.page_size();
         let page = address.0/page_size;
         let aligned_address = VirtualAddress(page * page_size);
-        self.unmap_aligned(aligned_address)
+        unsafe { self.unmap_aligned(aligned_address) }
     }
 }

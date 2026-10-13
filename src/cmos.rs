@@ -7,15 +7,17 @@ use super::{Record, RecordKind};
 unsafe fn text<'a>(ptr: *const u8, max: usize) -> &'a [u8] {
     let mut i = 0;
     while i < max {
-        if *ptr.add(i) == 0 {
+        if unsafe { *ptr.add(i) } == 0 {
             break;
         }
         i += 1;
     }
-    slice::from_raw_parts(
-        ptr,
-        i
-    )
+    unsafe {
+        slice::from_raw_parts(
+            ptr,
+            i
+        )
+    }
 }
 
 #[derive(Copy, Clone, Debug)]
@@ -75,7 +77,7 @@ pub struct Cmos {
 }
 
 impl Cmos {
-    pub fn records(&self) -> CmosRecords {
+    pub fn records(&self) -> CmosRecords<'_> {
         CmosRecords {
             table: self,
             i: self.header_length as usize,

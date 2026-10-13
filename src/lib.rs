@@ -51,7 +51,7 @@ struct Env<'m, F: FnMut(Table) -> Result<(), &'static str>, M: Mapper>  {
     mapper: &'m mut M,
 }
 
-impl<'m, F: FnMut(Table) -> Result<(), &'static str>, M: Mapper> Env<'m, F, M> {
+impl<F: FnMut(Table) -> Result<(), &'static str>, M: Mapper> Env<'_, F, M> {
     fn forward(&mut self, forward: &Forward) -> Result<(), &'static str> {
         let page_size = self.mapper.page_size();
 
