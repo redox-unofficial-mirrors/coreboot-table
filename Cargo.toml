@@ -2,6 +2,9 @@
 name = "coreboot-table"
 version = "0.1.6"
 authors = ["Jeremy Soller <jeremy@system76.com>"]
-edition = "2021"
+edition = "2024"
 description = "coreboot Table Parser"
 license = "MIT"
+
+[dependencies]
+bitflags = "2.13"

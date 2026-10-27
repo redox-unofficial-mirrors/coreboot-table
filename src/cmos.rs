@@ -7,15 +7,12 @@ use super::{Record, RecordKind};
 unsafe fn text<'a>(ptr: *const u8, max: usize) -> &'a [u8] {
     let mut i = 0;
     while i < max {
-        if *ptr.add(i) == 0 {
+        if unsafe { *ptr.add(i) } == 0 {
             break;
         }
         i += 1;
     }
-    slice::from_raw_parts(
-        ptr,
-        i
-    )
+    unsafe { slice::from_raw_parts(ptr, i) }
 }
 
 #[derive(Copy, Clone, Debug)]
@@ -34,7 +31,7 @@ impl CmosEntry {
         unsafe {
             text(
                 (self as *const CmosEntry as usize + mem::size_of::<CmosEntry>()) as *const u8,
-                self.record.size as usize - mem::size_of::<CmosEntry>()
+                self.record.size as usize - mem::size_of::<CmosEntry>(),
             )
         }
     }
@@ -54,7 +51,7 @@ impl CmosEnum {
         unsafe {
             text(
                 (self as *const CmosEnum as usize + mem::size_of::<CmosEnum>()) as *const u8,
-                self.record.size as usize - mem::size_of::<CmosEnum>()
+                self.record.size as usize - mem::size_of::<CmosEnum>(),
             )
         }
     }
@@ -75,7 +72,7 @@ pub struct Cmos {
 }
 
 impl Cmos {
-    pub fn records(&self) -> CmosRecords {
+    pub fn records(&self) -> CmosRecords<'_> {
         CmosRecords {
             table: self,
             i: self.header_length as usize,
@@ -96,12 +93,10 @@ impl<'a> Iterator for CmosRecords<'a> {
             let record = unsafe { &*(address as *const Record) };
             self.i += record.size as usize;
             Some(match record.kind {
-                RecordKind::Option => CmosRecord::Entry(unsafe {
-                    &*(address as *const CmosEntry)
-                }),
-                RecordKind::OptionEnum => CmosRecord::Enum(unsafe {
-                    &*(address as *const CmosEnum)
-                }),
+                RecordKind::Option => CmosRecord::Entry(unsafe { &*(address as *const CmosEntry) }),
+                RecordKind::OptionEnum => {
+                    CmosRecord::Enum(unsafe { &*(address as *const CmosEnum) })
+                }
                 _ => CmosRecord::Other(record),
             })
         } else {

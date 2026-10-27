@@ -38,20 +38,20 @@ pub enum Table<'a> {
     Other(&'a Record),
 }
 
-pub fn tables<F: FnMut(Table) -> Result<(), &'static str>, M: Mapper>(callback: F, mapper: &mut M) -> Result<(), &'static str> {
-    let mut env = Env {
-        callback,
-        mapper
-    };
+pub fn tables<F: FnMut(Table) -> Result<(), &'static str>, M: Mapper>(
+    callback: F,
+    mapper: &mut M,
+) -> Result<(), &'static str> {
+    let mut env = Env { callback, mapper };
     env.tables()
 }
 
-struct Env<'m, F: FnMut(Table) -> Result<(), &'static str>, M: Mapper>  {
+struct Env<'m, F: FnMut(Table) -> Result<(), &'static str>, M: Mapper> {
     callback: F,
     mapper: &'m mut M,
 }
 
-impl<'m, F: FnMut(Table) -> Result<(), &'static str>, M: Mapper> Env<'m, F, M> {
+impl<F: FnMut(Table) -> Result<(), &'static str>, M: Mapper> Env<'_, F, M> {
     fn forward(&mut self, forward: &Forward) -> Result<(), &'static str> {
         let page_size = self.mapper.page_size();
 
@@ -69,7 +69,11 @@ impl<'m, F: FnMut(Table) -> Result<(), &'static str>, M: Mapper> Env<'m, F, M> {
         }
     }
 
-    fn header(&mut self, header: Header, header_physical: PhysicalAddress) -> Result<(), &'static str> {
+    fn header(
+        &mut self,
+        header: Header,
+        header_physical: PhysicalAddress,
+    ) -> Result<(), &'static str> {
         let mut result = Ok(());
 
         let table_physical = PhysicalAddress(header_physical.0 + header.header_bytes as usize);
@@ -85,26 +89,24 @@ impl<'m, F: FnMut(Table) -> Result<(), &'static str>, M: Mapper> Env<'m, F, M> {
 
                 result = match record.kind {
                     RecordKind::CmosOptionTable => {
-                        (self.callback)(Table::Cmos(
-                            unsafe { &*(record_address as *const Cmos) }
-                        ))
-                    },
+                        (self.callback)(Table::Cmos(unsafe { &*(record_address as *const Cmos) }))
+                    }
                     RecordKind::Forward => {
                         let forward = unsafe { &*(record_address as *const Forward) };
                         self.forward(forward)
-                    },
-                    RecordKind::Framebuffer => (self.callback)(Table::Framebuffer(
-                        unsafe { &*(record_address as *const Framebuffer) }
-                    )),
-                    RecordKind::Memory => (self.callback)(Table::Memory(
-                        unsafe { &*(record_address as *const Memory) }
-                    )),
-                    RecordKind::Serial => (self.callback)(Table::Serial (
-                        unsafe { &*(record_address as *const Serial) }
-                    )),
-                    RecordKind::SmmstoreV2 => (self.callback)(Table::SmmstoreV2(
-                        unsafe { &*(record_address as *const SmmstoreV2) }
-                    )),
+                    }
+                    RecordKind::Framebuffer => (self.callback)(Table::Framebuffer(unsafe {
+                        &*(record_address as *const Framebuffer)
+                    })),
+                    RecordKind::Memory => (self.callback)(Table::Memory(unsafe {
+                        &*(record_address as *const Memory)
+                    })),
+                    RecordKind::Serial => (self.callback)(Table::Serial(unsafe {
+                        &*(record_address as *const Serial)
+                    })),
+                    RecordKind::SmmstoreV2 => (self.callback)(Table::SmmstoreV2(unsafe {
+                        &*(record_address as *const SmmstoreV2)
+                    })),
                     _ => (self.callback)(Table::Other(record)),
                 };
 
